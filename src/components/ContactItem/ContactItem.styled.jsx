@@ -1,15 +1,12 @@
 import styled from '@emotion/styled';
 
-export const Label = styled.label`
+export const ContItem = styled.li`
   display: flex;
-  flex-wrap: wrap;
-  span {
-    color: red;
-  }
+  justify-content: space-between;
+  align-items: flex-end;
 `;
 
 export const Button = styled.button`
-  width: 150px;
-  margin: 0 auto;
+  width: 80px;
   font-size: 20px;
 `;

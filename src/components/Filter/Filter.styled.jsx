@@ -1,10 +1,12 @@
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
-export const FilterWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  padding: 20px;
-  border: 1px dashed #676767;
-  border-radius: 5px;
+export const FilterLabel = styled.label`
+  font-size: 25px;
+`;
+
+export const FilterInput = styled.input`
+  margin-left: 10px;
+  width: 275px;
+  height: 30px;
+  font-size: 20px;
 `;

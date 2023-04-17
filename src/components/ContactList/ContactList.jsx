@@ -1,26 +1,28 @@
+import ContactItem from 'components/ContactItem';
+import { ContList } from './ContactList.styled';
 import PropTypes from 'prop-types';
-import { DeleteButton, ContactItem } from './ContactList.styled';
 
-const ContactList = ({ filteredContacts, onDeleteContact }) => {
-  return filteredContacts.map(({ id, name, number }) => (
-    <ContactItem key={id}>
-      {name}: {number}
-      <DeleteButton
-        id={id}
-        type="button"
-        onClick={() => {
-          onDeleteContact(id);
-        }}
-      >
-        Delete
-      </DeleteButton>
-    </ContactItem>
-  ));
+const ContactList = ({ contacts, onDeleteContact }) => {
+  return (
+    <ContList>
+      {contacts.map(({ id, name, number }) => {
+        return (
+          <ContactItem
+            key={id}
+            id={id}
+            name={name}
+            number={number}
+            onDeleteContact={onDeleteContact}
+          />
+        );
+      })}
+    </ContList>
+  );
 };
 
 ContactList.propTypes = {
-  filteredContacts: PropTypes.array.isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
+  visibleContats: PropTypes.array,
+  onDeleteContact: PropTypes.func,
 };
 
 export default ContactList;

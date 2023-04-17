@@ -1,38 +1,23 @@
-import { useMemo } from 'react';
-import { nanoid } from 'nanoid';
+import { FilterLabel, FilterInput } from './Filter.styled';
 import PropTypes from 'prop-types';
-import { FilterWrap } from './Filter.styled';
-import {
-  InputLabel,
-  InputField,
-} from 'components/ContactForm/ContactForm.styled';
 
-const Filter = ({ filterQuery }) => {
-  const filterId = useMemo(() => nanoid(4), []);
-
-  const handleChange = e => {
-    const { value } = e.target;
-
-    filterQuery(value.trim().toLowerCase());
-  };
-
+const Filter = ({ value, onInputChange }) => {
   return (
-    <FilterWrap>
-      <InputLabel htmlFor={filterId}>Find your contacts by name</InputLabel>
-      <InputField
+    <FilterLabel>
+      Find contacts by name
+      <FilterInput
         type="text"
         name="filter"
-        autoComplete="off"
-        title="Find your contacts by name"
-        id={filterId}
-        onChange={handleChange}
+        onChange={onInputChange}
+        value={value}
       />
-    </FilterWrap>
+    </FilterLabel>
   );
 };
 
 Filter.propTypes = {
-  filterQuery: PropTypes.func.isRequired,
+  value: PropTypes.string,
+  onInputChange: PropTypes.func,
 };
 
 export default Filter;

@@ -1,83 +1,86 @@
-import { useMemo, useState } from 'react';
-import { nanoid } from 'nanoid';
+import React, { Component } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Label, Button } from './ContactForm.styled';
+import styled from '@emotion/styled';
+import * as yup from 'yup';
+import 'yup-phone';
 import PropTypes from 'prop-types';
-import { Form, InputLabel, InputField, AddButton } from './ContactForm.styled';
 
-const ContactForm = ({ onSubmit }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+const Input = styled(Field)`
+  max-width: 100%;
+  margin-left: auto;
+  font-size: 20px;
+`;
 
-  const nameInputId = useMemo(() => nanoid(4), []);
-  const numberInputId = useMemo(() => nanoid(4), []);
+const ConttForm = styled(Form)`
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+  gap: 10px;
+  font-size: 20px;
+`;
 
-  const resetForm = () => {
-    setName('');
-    setNumber('');
-  };
+const initialValues = { name: '', number: '' };
 
-  const handleChange = e => {
-    const { name, value } = e.currentTarget;
+const nameRegExp = /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/;
 
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
+const phoneRegExp =
+  /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/;
 
-      case 'number':
-        setNumber(value);
-        break;
+let SignupSchema = yup.object().shape({
+  name: yup
+    .string()
+    .trim()
+    .matches(
+      nameRegExp,
+      "Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+    )
+    .required(),
+  number: yup
+    .string()
+    .matches(
+      phoneRegExp,
+      'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +'
+    )
+    .required(),
+});
 
-      default:
-        return;
-    }
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    const id = nanoid(6);
-
-    onSubmit({ id, name, number });
+class ContactForm extends Component {
+  handleSubmit = (values, { resetForm }) => {
+    this.props.onSubmit(values);
 
     resetForm();
   };
 
-  return (
-    <Form onSubmit={handleSubmit}>
-      <InputLabel htmlFor={nameInputId}>Name</InputLabel>
-      <InputField
-        type="text"
-        name="name"
-        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-        title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-        id={nameInputId}
-        placeholder="Contact name"
-        required
-        autoComplete="off"
-        onChange={handleChange}
-        value={name}
-      />
+  render() {
+    return (
+      <Formik
+        initialValues={initialValues}
+        onSubmit={this.handleSubmit}
+        validationSchema={SignupSchema}
+      >
+        <ConttForm autoComplete="off">
+          <Label>
+            Name
+            <Input type="text" name="name" />
+            <ErrorMessage name="name" component="span" />
+          </Label>
 
-      <InputLabel htmlFor={numberInputId}>Number</InputLabel>
-      <InputField
-        type="tel"
-        name="number"
-        pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-        id={numberInputId}
-        placeholder="Phone number"
-        required
-        autoComplete="off"
-        onChange={handleChange}
-        value={number}
-      />
-      <AddButton type="submit">Add contact</AddButton>
-    </Form>
-  );
-};
+          <Label>
+            Number
+            <Input type="tel" name="number" required />
+            <ErrorMessage name="number" component="span" />
+          </Label>
+
+          <Button type="submit">Add contact</Button>
+        </ConttForm>
+      </Formik>
+    );
+  }
+}
 
 ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func,
 };
 
 export default ContactForm;
