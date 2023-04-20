@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import ContactForm from '../ContactForm';
-import ContactList from '../ContactItem';
+import ContactList from '../ContactList';
 import Filter from '../Filter';
 import { ContactsTitle, Container } from './App.styled';
 import useLocalStorage from '../Hooks/useLocalStorage';
